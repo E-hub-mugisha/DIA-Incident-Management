@@ -3,10 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\Auditable;
 
 class Incident extends Model
 {
     //
+    use Auditable;
+
     protected $fillable = [
         'title',
         'description',
@@ -27,8 +30,32 @@ class Incident extends Model
         return $this->belongsTo(User::class, 'reported_by');
     }
 
+    // User who reported the incident
+    public function reporter()
+    {
+        return $this->belongsTo(User::class, 'reported_by');
+    }
     public function assignedTo()
     {
         return $this->belongsTo(User::class, 'assigned_to');
+    }
+    public function reviews()
+    {
+        return $this->hasMany(IncidentReviews::class);
+    }
+
+    // Audit logs
+    public function auditLogs()
+    {
+        return $this->morphMany(AuditLog::class, 'auditable');
+    }
+
+    public function dailyNotes()
+    {
+        return $this->hasMany(DailyNote::class);
+    }
+    public function mitigations()
+    {
+        return $this->hasMany(IncidentMitigation::class);
     }
 }

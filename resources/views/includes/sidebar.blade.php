@@ -70,8 +70,8 @@ use Illuminate\Support\Facades\Auth;
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('incidents.assigned') }}">
-                        <p>Incidents Assigned</p>
+                    <a href="{{ route('incidents.unassigned') }}">
+                        <p>Incidents Unassigned</p>
                     </a>
                 </li>
                 <li class="nav-item">

@@ -33,7 +33,7 @@
                                     @foreach ($incidents as $index => $incident)
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
-                                        <td>{{ $incident->title }}</td>
+                                        <td><a href="{{ route('incidents.show', $incident->id ) }}">{{ $incident->title }} </a></td>
                                         <td>{{ $incident->category->name ?? 'N/A' }}</td>
                                         <td>{{ $incident->severity }}</td>
                                         <td>{{ $incident->reportedBy->name ?? 'N/A' }}</td>
@@ -84,44 +84,76 @@
                                         <td>{{ $incident->location ?? 'N/A' }}</td>
                                         <td>
                                             @php
-    $statusColors = ['new' => 'primary', 'acknowledged' => 'warning', 'in_progress' => 'info', 'resolved' => 'success'];
-@endphp
-<span class="badge bg-{{ $statusColors[$incident->status] ?? 'secondary' }}">{{ ucwords(str_replace('_', ' ', $incident->status)) }}</span>
+                                            $statusColors = ['new' => 'primary', 'acknowledged' => 'warning', 'in_progress' => 'info', 'resolved' => 'success'];
+                                            @endphp
+                                            <span class="badge bg-{{ $statusColors[$incident->status] ?? 'secondary' }}">{{ ucwords(str_replace('_', ' ', $incident->status)) }}</span>
 
                                         </td>
-                                        
+
                                         <td class="text-center">
                                             <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#showIncidentModal{{ $incident->id }}">
-                                                    <i class="bi bi-eye"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editIncidentModal{{ $incident->id }}">
-                                                    <i class="bi bi-pencil-square"></i>
-                                                </button>
-                                                <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteIncidentModal{{ $incident->id }}">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
-                                            
+                                                view
+                                            </button>
+                                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editIncidentModal{{ $incident->id }}">
+                                                edit
+                                            </button>
+                                            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteIncidentModal{{ $incident->id }}">
+                                                delete
+                                            </button>
+
                                         </td>
                                     </tr>
 
                                     {{-- Show Incident Modal --}}
                                     <div class="modal fade
                                             " id="showIncidentModal{{ $incident->id }}" tabindex="-1">
-                                        <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-dialog modal-dialog-centered modal-lg">
                                             <div class="modal-content shadow rounded-4">
                                                 <div class="modal-header bg-info text-white rounded-top-4">
                                                     <h5 class="modal-title"><i class="bi bi-eye me-2"></i>Incident Details</h5>
                                                     <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <p><strong>Title:</strong> {{ $incident->title }}</p>
-                                                    <p><strong>Description:</strong> {{ $incident->description }}</p>
-                                                    <p><strong>Category:</strong> {{ $incident->category->name ?? 'N/A' }}</p>
-                                                    <p><strong>Severity:</strong> {{ $incident->severity }}</p>
-                                                    <p><strong>Reported By:</strong> {{ $incident->reportedBy->name ?? 'N/A' }}</p>
-                                                    <p><strong>Assigned To:</strong> {{ $incident->assignedTo->name ?? 'N/A' }}</p>
-                                                    <p><strong>Status:</strong> {{ $incident->status }}</p>
-                                                    <p><strong>Location:</strong> {{ $incident->location ?? 'N/A' }}</p>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <p><strong>Title:</strong> {{ $incident->title }}</p>
+                                                            <p><strong>Description:</strong> {{ $incident->description }}</p>
+                                                            <p><strong>Category:</strong> {{ $incident->category->name ?? 'N/A' }}</p>
+                                                            <p><strong>Severity:</strong> {{ $incident->severity }}</p>
+                                                            <p><strong>Reported By:</strong> {{ $incident->reportedBy->name ?? 'N/A' }}</p>
+                                                            <p><strong>Assigned To:</strong> {{ $incident->assignedTo->name ?? 'N/A' }}</p>
+                                                            <p><strong>Status:</strong> {{ $incident->status }}</p>
+                                                            <p><strong>Location:</strong> {{ $incident->location ?? 'N/A' }}</p>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <form action="{{ route('incident-reviews.store') }}" method="POST" enctype="multipart/form-data">
+                                                                @csrf
+                                                                <input type="hidden" name="incident_id" value="{{ $incident->id }}">
+
+                                                                <div class="mb-3">
+                                                                    <label for="rating" class="form-label">Rating (1–5)</label>
+                                                                    <select name="rating" id="rating" class="form-select" required>
+                                                                        @for ($i = 1; $i <= 5; $i++)
+                                                                            <option value="{{ $i }}">{{ $i }}</option>
+                                                                            @endfor
+                                                                    </select>
+                                                                </div>
+
+                                                                <div class="mb-3">
+                                                                    <label for="comment" class="form-label">Comment</label>
+                                                                    <textarea name="comment" id="comment" class="form-control" rows="4" required></textarea>
+                                                                </div>
+
+                                                                <div class="mb-3">
+                                                                    <label for="media" class="form-label">Upload File (optional)</label>
+                                                                    <input type="file" name="media" class="form-control">
+                                                                </div>
+
+                                                                <button type="submit" class="btn btn-primary">Submit Review</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>

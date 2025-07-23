@@ -15,17 +15,49 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $roles = ['admin', 'Risk Manager', 'Department Head', 'Staff', 'Auditor'];
+        // Admins
+        User::create([
+            'name' => 'Major General Jean Bosco',
+            'email' => 'jean.bosco@rdf.gov.rw',
+            'password' => Hash::make('password'),
+            'role' => 'admin',
+        ]);
 
-        for ($i = 1; $i <= 10; $i++) {
-            User::create([
-                'name' => 'User ' . $i,
-                'email' => 'user' . $i . '@example.com',
-                'password' => Hash::make('password'), // default password
-                'role' => $roles[array_rand($roles)],
-                'email_verified_at' => now(),
-                'remember_token' => Str::random(10),
-            ]);
-        }
+        User::create([
+            'name' => 'Brigadier General Innocent Nduwayezu',
+            'email' => 'innocent.nduwayezu@rdf.gov.rw',
+            'password' => Hash::make('password'),
+            'role' => 'admin',
+        ]);
+
+        // Handlers
+        User::create([
+            'name' => 'Captain Emmanuel Nkurunziza',
+            'email' => 'emmanuel.nkurunziza@rdf.gov.rw',
+            'password' => Hash::make('password'),
+            'role' => 'handler',
+        ]);
+
+        User::create([
+            'name' => 'Lieutenant Alice Umutoni',
+            'email' => 'alice.umutoni@rdf.gov.rw',
+            'password' => Hash::make('password'),
+            'role' => 'handler',
+        ]);
+
+        // Reporters
+        User::create([
+            'name' => 'Private Eric Mugisha',
+            'email' => 'eric.mugisha@rdf.gov.rw',
+            'password' => Hash::make('password'),
+            'role' => 'reporter',
+        ]);
+
+        User::create([
+            'name' => 'Sergeant Diane Uwase',
+            'email' => 'diane.uwase@rdf.gov.rw',
+            'password' => Hash::make('password'),
+            'role' => 'reporter',
+        ]);
     }
 }

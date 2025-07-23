@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Incident;
+use App\Models\IncidentMitigation;
 use App\Models\Mitigation;
-use App\Models\Risk;
-use App\Models\Staff;
+use App\Models\user;
 use Illuminate\Http\Request;
 
 class MitigationController extends Controller
@@ -19,23 +20,30 @@ class MitigationController extends Controller
      */
     public function index()
     {
-        $mitigations = Mitigation::with('risk')->latest()->get();
-        $risks = Risk::all();
-        $staffs = Staff::all();
-        return view('mitigations.index', compact('mitigations','risks','staffs'));
+        $mitigations = IncidentMitigation::with('incident')->latest()->get();
+        $incidents = Incident::all();
+        $users = User::all();
+        return view('mitigations.index', compact('mitigations','incidents','users'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'risk_id' => 'required|exists:risks,id',
-            'strategy' => 'required|string',
-            'staff_id' => 'required|exists:staff,id',
-            'deadline' => 'required|date',
-            'status' => 'required',
+            'incident_id' => 'required|exists:incidents,id',
+            'mitigation' => 'required|string',
+            'user_id' => 'required|exists:users,id',
         ]);
 
-        Mitigation::create($request->all());
+        $mitigation = IncidentMitigation::create([
+            'incident_id' => $request->incident_id,
+            'user_id' => $request->user_id,
+            'mitigation' => $request->mitigation,
+        ]);
+
+        // Update the incident status to 'resolved'
+        $incident = $mitigation->incident;
+        $incident->status = 'resolved';
+        $incident->save();
 
         return redirect()->back()->with('success', 'Mitigation action added.');
     }
@@ -43,10 +51,8 @@ class MitigationController extends Controller
     public function update(Request $request, Mitigation $mitigation)
     {
         $request->validate([
-            'strategy' => 'required|string',
-            'staff_id' => 'required|staff,id',
-            'deadline' => 'required|date',
-            'status' => 'required',
+            'mitigation' => 'required|string',
+            'user_id' => 'required|users,id',
         ]);
 
         $mitigation->update($request->all());

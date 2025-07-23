@@ -65,11 +65,16 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/incidents', [IncidentController::class, 'index'])->name('incidents.index');
     Route::post('/incidents', [IncidentController::class, 'store'])->name('incidents.store');
-    Route::get('/incidents/{incident}', [IncidentController::class, 'show'])->name('incidents.show');
+    Route::get('/incidents/{id}', [IncidentController::class, 'show'])->name('incidents.show');
     Route::put('/incidents/{incident}', [IncidentController::class, 'update'])->name('incidents.update');
     Route::delete('/incidents/{incident}', [IncidentController::class, 'destroy'])->name('incidents.destroy');
-    Route::put('/incidents/{id}/assign', [IncidentController::class, 'assign'])->name('incidents.assign');
+    Route::put('/incidents/{incident}/assign', [IncidentController::class, 'assign'])->name('incidents.assign');
     Route::get('/incidents/get/assigned', [IncidentController::class, 'incidentAssigned'])->name('incidents.assigned');
+    Route::get('/incidents/get/unassigned', [IncidentController::class, 'unassigned'])->name('incidents.unassigned');
+    Route::post('/incident-reviews', [IncidentController::class, 'incidentReview'])->name('incident-reviews.store');
+    Route::post('/incidents/{incident}/notes', [IncidentController::class, 'storeNote'])->name('incidents.notes.store');
+    Route::post('/incidents/{incident}/mitigations', [IncidentController::class, 'storeMitigation'])->name('incidents.mitigations.store');
+
 
     Route::get('/mitigations', [MitigationController::class, 'index'])->name('mitigations.index');
     Route::post('/mitigations', [MitigationController::class, 'store'])->name('mitigations.store');

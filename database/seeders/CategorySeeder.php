@@ -14,20 +14,38 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         $categories = [
-            ['name' => 'Financial', 'description' => 'Risks related to financial activities.'],
-            ['name' => 'Operational', 'description' => 'Risks arising from operations and logistics.'],
-            ['name' => 'Compliance', 'description' => 'Risks related to laws, regulations, and policies.'],
-            ['name' => 'Strategic', 'description' => 'Risks that affect business direction or goals.'],
-            ['name' => 'IT & Cybersecurity', 'description' => 'Technology-related threats including breaches and outages.'],
-            ['name' => 'Reputation', 'description' => 'Risks impacting company image or stakeholder trust.'],
-            ['name' => 'Health & Safety', 'description' => 'Employee and environmental safety concerns.'],
-            ['name' => 'Project', 'description' => 'Risks associated with ongoing or upcoming projects.'],
-            ['name' => 'Environmental', 'description' => 'Risks involving natural disasters or environmental issues.'],
-            ['name' => 'Legal', 'description' => 'Litigation or legal non-compliance risks.'],
+            [
+                'name' => 'Cybersecurity Breach',
+                'description' => 'Incidents involving unauthorized access, data leaks, or malware attacks.'
+            ],
+            [
+                'name' => 'Border Violation',
+                'description' => 'Reports of unauthorized border crossings or foreign intrusions.'
+            ],
+            [
+                'name' => 'Internal Threat',
+                'description' => 'Threats originating from within the armed forces or allied agencies.'
+            ],
+            [
+                'name' => 'Public Disturbance',
+                'description' => 'Protests, riots, or civil unrest affecting national security.'
+            ],
+            [
+                'name' => 'Weapons Malfunction',
+                'description' => 'Defective or malfunctioning military equipment during operations or training.'
+            ],
+            [
+                'name' => 'Espionage Suspected',
+                'description' => 'Suspicious activity potentially linked to spying or information leaks.'
+            ],
+            [
+                'name' => 'Unidentified Aerial Activity',
+                'description' => 'Sightings or detections of unknown aircraft or drones in restricted airspace.'
+            ]
         ];
 
         foreach ($categories as $category) {
-            Category::create($category);
+            Category::updateOrCreate(['name' => $category['name']], $category);
         }
     }
 }

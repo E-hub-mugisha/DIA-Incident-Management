@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Department;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DepartmentSeeder extends Seeder
 {
@@ -14,20 +15,27 @@ class DepartmentSeeder extends Seeder
     public function run(): void
     {
         $departments = [
-            ['name' => 'Finance', 'description' => 'Handles budgeting, audits, and financial planning.'],
-            ['name' => 'Operations', 'description' => 'Oversees day-to-day company operations.'],
-            ['name' => 'Human Resources', 'description' => 'Manages hiring, benefits, and employee relations.'],
-            ['name' => 'ICT', 'description' => 'Responsible for technology and systems.'],
-            ['name' => 'Procurement', 'description' => 'Manages purchases and vendor relationships.'],
-            ['name' => 'Legal', 'description' => 'Provides legal support and risk compliance.'],
-            ['name' => 'Risk Management', 'description' => 'Identifies and mitigates potential business risks.'],
-            ['name' => 'Internal Audit', 'description' => 'Performs independent evaluations of systems and controls.'],
-            ['name' => 'Customer Service', 'description' => 'Handles customer inquiries and support.'],
-            ['name' => 'Public Relations', 'description' => 'Manages external communications and image.'],
+            ['name' => 'Military Intelligence Directorate', 'description' => 'MID'],
+            ['name' => 'Rwanda Air Force', 'description' => 'RAF'],
+            ['name' => 'Rwanda Navy Division', 'description' => 'RND'],
+            ['name' => 'Logistics and Support Command', 'description' => 'LSC'],
+            ['name' => 'Cyber Defense Unit', 'description' => 'CDU'],
+            ['name' => 'Peacekeeping Operations', 'description' => 'PKO'],
+            ['name' => 'Special Forces Command', 'description' => 'SFC'],
+            ['name' => 'Military Police', 'description' => 'MP'],
+            ['name' => 'Medical Corps', 'description' => 'MC'],
+            ['name' => 'Defense Communications', 'description' => 'DCOM'],
         ];
 
-        foreach ($departments as $department) {
-            Department::create($department);
+        foreach ($departments as $dept) {
+            DB::table('departments')->updateOrInsert(
+                ['description' => $dept['description']],
+                [
+                    'name' => $dept['name'],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]
+            );
         }
     }
 }

@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Department;
-use App\Models\Mitigation;
-use App\Models\Risk;
+use App\Models\IncidentMitigation;
+use App\Models\Incident;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -15,18 +15,18 @@ class DashboardController extends Controller
     public function dashboard()
     {
         $totalUsers = User::count();
-        $totalRisks = Risk::count();
-        $totalMitigations = Mitigation::count();
+        $totalIncidents = Incident::count();
+        $totalMitigations = IncidentMitigation::count();
         $totalDepartments = Department::count();
 
-        // Pie chart: Mitigation status breakdown
-        $statusSummary = Mitigation::selectRaw('status, COUNT(*) as count')
+        // Pie chart: IncidentMitigation status breakdown
+        $statusSummary = Incident::selectRaw('status, COUNT(*) as count')
             ->groupBy('status')
             ->pluck('count', 'status')
             ->toArray();
 
-        // Line chart: Monthly mitigation trends (this year)
-        $months = Mitigation::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
+        // Line chart: Monthly IncidentMitigation trends (this year)
+        $months = IncidentMitigation::selectRaw('MONTH(created_at) as month, COUNT(*) as count')
             ->whereYear('created_at', now()->year)
             ->groupBy('month')
             ->orderBy('month')
@@ -41,28 +41,32 @@ class DashboardController extends Controller
         }
         $monthlyData = array_combine($monthLabels, $monthValues);
 
-        // Latest 5 risks
-        $recentRisks = Risk::with(['department', 'category'])
+        // Latest 5 Incidents
+        $mitigations = IncidentMitigation::with([ 'incident'])
             ->latest()
             ->take(5)
             ->get();
 
-        // Active risks without mitigation
-        $risksWithoutMitigation = Risk::doesntHave('mitigations')
-            ->where('status', 'active')
-            ->with('department')
+        // Active Incidents without mitigation
+        $IncidentsWithoutMitigation = Incident::doesntHave('mitigations')
+            ->where('status', 'new')
+            ->with('category')
             ->get();
 
+            $users = User::all();
+            $incidents = Incident::all();
         return view('dashboard.admin', compact(
             'totalUsers',
-            'totalRisks',
+            'totalIncidents',
             'totalMitigations',
             'totalDepartments',
             'statusSummary',
-            'recentRisks',
+            'mitigations',
             'months',
             'monthlyData',
-            'risksWithoutMitigation'
+            'IncidentsWithoutMitigation',
+            'users',
+            'incidents'
         ));
     }
 

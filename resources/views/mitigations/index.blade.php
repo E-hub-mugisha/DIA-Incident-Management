@@ -36,10 +36,9 @@
                             <table id="basic-datatables" class="display table table-striped table-hover">
                                 <thead>
                                     <tr>
-                                        <th>Risk</th>
+                                        <th>Incident</th>
                                         <th>Action Plan</th>
                                         <th>Responsible</th>
-                                        <th>Deadline</th>
                                         <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
@@ -47,17 +46,17 @@
                                 <tbody>
                                     @foreach($mitigations as $mitigation)
                                     <tr>
-                                        <td>{{ $mitigation->risk->title }}</td>
-                                        <td>{{ $mitigation->strategy }}</td>
-                                        <td>{{ $mitigation->staff->name }}</td>
-                                        <td>{{ $mitigation->deadline }}</td>
+                                        <td>{{ $mitigation->incident->title }}</td>
+                                        <td>{{ $mitigation->mitigation }}</td>
+                                        <td>{{ $mitigation->user->name }}</td>
+                                        <td>{{ $mitigation->incident->status }}</td>
                                         <td>
-                                            <span class="badge bg-{{ $mitigation->status == 'Completed' ? 'success' : ($mitigation->status == 'In Progress' ? 'warning' : 'secondary') }}">
-                                                {{ $mitigation->status }}
+                                            <span class="badge bg-{{ $mitigation->incident->status == 'Completed' ? 'success' : ($mitigation->status == 'In Progress' ? 'warning' : 'secondary') }}">
+                                                {{ $mitigation->incident->status }}
                                             </span>
                                         </td>
                                         <td>
-                                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editModal{{ $mitigation->id }}">Edit</button>
+                                            <a href="{{ route('incidents.show', $mitigation->incident->id ) }}" class="btn btn-sm btn-warning">view</a>
                                             <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $mitigation->id }}">Delete</button>
                                         </td>
                                     </tr>
@@ -71,53 +70,7 @@
             </div>
         </div>
     </div>
-    @foreach($mitigations as $mitigation)
-    {{-- Edit Modal --}}
-    <div class="modal fade" id="editModal{{ $mitigation->id }}" tabindex="-1">
-        <div class="modal-dialog">
-            <form action="{{ route('mitigations.update', $mitigation->id) }}" method="POST" class="modal-content">
-                @csrf
-                @method('PUT')
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit Mitigation</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" name="risk_id" value="{{ $mitigation->risk_id }}">
-                    <div class="mb-3">
-                        <label>Strategy Plan</label>
-                        <input type="text" name="strategy" class="form-control" value="{{ $mitigation->strategy }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label>Staff</label>
-                        <select name="staff_id" class="form-select" required>
-                            <option value="">Select staff</option>
-                            @foreach( $staffs as $staff)
-                            <option value="{{ $staff->id }}" {{ $mitigation->staff_id ? 'selected' : ''}}>{{ $mitigation->staff->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label>Deadline</label>
-                        <input type="date" name="deadline" class="form-control" value="{{ $mitigation->deadline }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label>Status</label>
-                        <select name="status" class="form-select" required>
-                            @foreach(['Not Started', 'In Progress', 'Completed', 'Overdue'] as $status)
-                            <option value="{{ $status }}" {{ $mitigation->status === $status ? 'selected' : '' }}>{{ $status }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button class="btn btn-primary" type="submit">Update</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    @endforeach
+    
 
     @foreach($mitigations as $mitigation)
     {{-- Delete Modal --}}
@@ -153,38 +106,25 @@
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label>Risk</label>
-                        <select name="risk_id" class="form-select" required>
-                            <option value="">Select Risk</option>
-                            @foreach( $risks as $risk)
-                            <option value="{{ $risk->id }}">{{ $risk->title }}</option>
+                        <label>Incident</label>
+                        <select name="incident_id" class="form-select" required>
+                            <option value="">Select incident</option>
+                            @foreach( $incidents as $incident)
+                            <option value="{{ $incident->id }}">{{ $incident->title }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label>Strategy Plan</label>
-                        <input type="text" name="strategy" class="form-control" required>
+                        <label>Mitigation Plan</label>
+                        <input type="text" name="mitigation" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label>Staff</label>
-                        <select name="staff_id" class="form-select" required>
-                            <option value="">Select staff</option>
-                            @foreach( $staffs as $staff)
-                            <option value="{{ $staff->id }}">{{ $staff->name }}</option>
+                        <label>User</label>
+                        <select name="user_id" class="form-select" required>
+                            <option value="">Select user</option>
+                            @foreach( $users as $user)
+                            <option value="{{ $user->id }}">{{ $user->name }}</option>
                             @endforeach
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label>Deadline</label>
-                        <input type="date" name="deadline" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label>Status</label>
-                        <select name="status" class="form-select" required>
-                            <option value="Not Started">Not Started</option>
-                            <option value="In Progress">In Progress</option>
-                            <option value="Completed">Completed</option>
-                            <option value="Overdue">Overdue</option>
                         </select>
                     </div>
                 </div>
