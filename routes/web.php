@@ -7,9 +7,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\IncidentController;
 use App\Http\Controllers\MitigationController;
-use App\Http\Controllers\MonitoringController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\RiskController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -82,7 +80,6 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/mitigations/{mitigation}', [MitigationController::class, 'update'])->name('mitigations.update');
     Route::delete('/mitigations/{mitigation}', [MitigationController::class, 'destroy'])->name('mitigations.destroy');
 
-    Route::get('/monitoring', [MonitoringController::class, 'index'])->name('monitoring.index');
 });
 
 

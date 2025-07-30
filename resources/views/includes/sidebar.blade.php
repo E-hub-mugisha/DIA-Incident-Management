@@ -79,11 +79,7 @@ use Illuminate\Support\Facades\Auth;
                         <p>Mitigations</p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="{{ route('monitoring.index') }}">
-                        <p>Monitoring</p>
-                    </a>
-                </li>
+                
                 @endif
 
                 {{-- handler --}}
@@ -98,11 +94,7 @@ use Illuminate\Support\Facades\Auth;
                         <p>Mitigations</p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="{{ route('monitoring.index') }}">
-                        <p>Monitoring</p>
-                    </a>
-                </li>
+                
                 @endif
 
             </ul>
