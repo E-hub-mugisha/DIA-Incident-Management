@@ -24,7 +24,6 @@
                                         <th>Severity</th>
                                         <th>Reported By</th>
                                         <th>Assigned To</th>
-                                        <th>Location</th>
                                         <th>Status</th>
                                         <th class="text-center">Actions</th>
                                     </tr>
@@ -81,7 +80,6 @@
                                             @endif
 
                                         </td>
-                                        <td>{{ $incident->location ?? 'N/A' }}</td>
                                         <td>
                                             @php
                                             $statusColors = ['new' => 'primary', 'acknowledged' => 'warning', 'in_progress' => 'info', 'resolved' => 'success'];
@@ -92,16 +90,22 @@
 
                                         <td class="text-center">
                                             <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#showIncidentModal{{ $incident->id }}">
-                                                view
+                                                View
                                             </button>
                                             <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editIncidentModal{{ $incident->id }}">
-                                                edit
+                                                Edit
+                                            </button>
+                                            <a href="{{ route('incidents.report', $incident->id) }}" class="btn btn-sm btn-secondary">
+                                                Report
+                                            </a>
+                                            <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#generateReportModal{{ $incident->id }}">
+                                                Generate Report
                                             </button>
                                             <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteIncidentModal{{ $incident->id }}">
-                                                delete
+                                                Delete
                                             </button>
-
                                         </td>
+
                                     </tr>
 
                                     {{-- Show Incident Modal --}}
@@ -262,10 +266,29 @@
                                         </div>
                                     </div>
 
-
+                                    {{-- Generate Report Modal --}}
+                                    <div class="modal fade" id="generateReportModal{{ $incident->id }}" tabindex="-1">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header bg-info text-white rounded-top-4">
+                                                    <h5 class="modal-title"><i class="bi bi-file-earmark-text me-2"></i>Generate Incident Report</h5>
+                                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Are you sure you want to generate a report for this incident?</p>
+                                                    <p><strong>{{ $incident->title }}</strong></p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <a href="{{ route('incidents.report', $incident->id) }}" class="btn btn-info">
+                                                        <i class="bi bi-file-earmark-pdf me-1"></i> Download Report
+                                                    </a>
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     {{-- Delete Incident Modal --}}
-                                    <div class="modal fade
-                                            " id="deleteIncidentModal{{ $incident->id }}" tabindex="-1">
+                                    <div class="modal fade" id="deleteIncidentModal{{ $incident->id }}" tabindex="-1">
                                         <div class="modal-dialog modal-dialog-centered">
                                             <div class="modal-content shadow rounded-4">
                                                 <div class="modal-header bg-danger text-white rounded-top-4">
@@ -286,6 +309,29 @@
                                                 </div>
                                             </div>
                                         </div>
+
+                                        {{-- Report Incident Modal --}}
+                                        <div class="modal fade" id="reportIncidentModal{{ $incident->id }}" tabindex="-1">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content shadow rounded-4">
+                                                    <div class="modal-header bg-info text-white rounded-top-4">
+                                                        <h5 class="modal-title"><i class="bi bi-file-earmark-text me-2"></i>Report Incident</h5>
+                                                        <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <form method="POST" action="{{ route('incidents.report', $incident->id) }}">
+                                                        @csrf
+                                                        <div class="modal-body">
+                                                            <p>Are you sure you want to generate a report for this incident?</p>
+                                                            <p><strong>{{ $incident->title }}</strong></p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="submit" class="btn btn-info">Generate Report</button>
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
                                         @endforeach
                                 </tbody>
                             </table>
@@ -295,6 +341,7 @@
             </div>
         </div>
     </div>
+
     {{-- Add Modal --}}
     <div class="modal fade" id="addIncidentModal" tabindex="-1" aria-labelledby="addIncidentModalLabel" aria-hidden="true">
         <div class="modal-dialog  modal-lg">
@@ -388,9 +435,6 @@
         </div>
     </div>
 </div>
-
-
-
 
 
 @endsection

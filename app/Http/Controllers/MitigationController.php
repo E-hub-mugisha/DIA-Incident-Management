@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Mail\IncidentMitigatedMail;
 use App\Models\Incident;
 use App\Models\IncidentMitigation;
 use App\Models\Mitigation;
 use App\Models\user;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class MitigationController extends Controller
 {
@@ -23,7 +25,7 @@ class MitigationController extends Controller
         $mitigations = IncidentMitigation::with('incident')->latest()->get();
         $incidents = Incident::all();
         $users = User::all();
-        return view('mitigations.index', compact('mitigations','incidents','users'));
+        return view('mitigations.index', compact('mitigations', 'incidents', 'users'));
     }
 
     public function store(Request $request)
@@ -45,6 +47,9 @@ class MitigationController extends Controller
         $incident->status = 'resolved';
         $incident->save();
 
+        // Send email notification
+        Mail::to('kericmugisha@gmail.com')->send(new IncidentMitigatedMail($mitigation));
+
         return redirect()->back()->with('success', 'Mitigation action added.');
     }
 
@@ -60,9 +65,10 @@ class MitigationController extends Controller
         return redirect()->back()->with('success', 'Mitigation action updated.');
     }
 
-    public function destroy(Mitigation $mitigation)
+    public function destroy(IncidentMitigation $mitigation)
     {
         $mitigation->delete();
         return redirect()->back()->with('success', 'Mitigation action deleted.');
     }
+
 }

@@ -72,6 +72,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/incident-reviews', [IncidentController::class, 'incidentReview'])->name('incident-reviews.store');
     Route::post('/incidents/{incident}/notes', [IncidentController::class, 'storeNote'])->name('incidents.notes.store');
     Route::post('/incidents/{incident}/mitigations', [IncidentController::class, 'storeMitigation'])->name('incidents.mitigations.store');
+    Route::get('/incidents/{incident}/report', [App\Http\Controllers\IncidentController::class, 'generateReport'])
+        ->name('incidents.report');
 
 
     Route::get('/mitigations', [MitigationController::class, 'index'])->name('mitigations.index');
@@ -79,7 +81,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/mitigations/{mitigation}', [MitigationController::class, 'show'])->name('mitigations.show');
     Route::put('/mitigations/{mitigation}', [MitigationController::class, 'update'])->name('mitigations.update');
     Route::delete('/mitigations/{mitigation}', [MitigationController::class, 'destroy'])->name('mitigations.destroy');
-
+    Route::post('/mitigations/{mitigation}/report', [MitigationController::class, 'generateReport'])->name('mitigations.report');
 });
 
 

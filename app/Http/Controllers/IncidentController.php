@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\IncidentAssignmentMail;
+use App\Mail\IncidentMitigatedMail;
+use App\Mail\IncidentReportedMail;
 use App\Models\Category;
 use App\Models\Incident;
 use App\Models\IncidentMitigation;
 use App\Models\IncidentReviews;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class IncidentController extends Controller
 {
@@ -35,6 +40,12 @@ class IncidentController extends Controller
 
         $incident = new Incident($validated);
         $incident->save();
+
+        // Notify admins or security team
+        $admins = User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            Mail::to($admin->email)->send(new IncidentReportedMail($incident));
+        }
 
         return redirect()->back()->with('success', 'Incident created successfully.');
     }
@@ -80,7 +91,10 @@ class IncidentController extends Controller
         $incident->status = $request->status;
         $incident->save();
 
-        // Optional: Send notification to assigned user here
+        $user = User::find($incident->assigned_to);
+
+        // Send notification
+        Mail::to($user->email)->send(new IncidentAssignmentMail($incident));
 
         return redirect()->route('incidents.unassigned')->with('success', 'Incident assigned successfully.');
     }
@@ -162,6 +176,28 @@ class IncidentController extends Controller
         $incident->status = 'resolved';
         $incident->save();
 
+        // Notify reporter
+        if ($incident->reported_by) {
+            $reporter = User::find($incident->reported_by);
+            if ($reporter) {
+                Mail::to($reporter->email)->send(new IncidentMitigatedMail($incident));
+            }
+        }
+
+        // Notify assigned staff (optional)
+        if ($incident->assigned_to) {
+            $user = User::find($incident->assigned_to);
+            if ($user) {
+                Mail::to($user->email)->send(new IncidentMitigatedMail($incident));
+            }
+        }
+
         return redirect()->back()->with('success', 'Mitigation added and incident marked as resolved.');
+    }
+
+    public function generateReport(Incident $incident)
+    {
+        $pdf = Pdf::loadView('incidents.reports', compact('incident'));
+        return $pdf->download('incident-report-' . $incident->title . '.pdf');
     }
 }
