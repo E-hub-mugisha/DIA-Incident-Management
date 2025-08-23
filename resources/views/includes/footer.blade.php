@@ -17,7 +17,7 @@
         </nav>
 
         <div class="text-muted small">
-            &copy; {{ date('Y') }} {{ config('app.name', 'DIA Incident Management') }}. All rights reserved.
+            &copy; {{ date('Y') }} {{ config('app.name', 'VigilantEye Management') }}. All rights reserved.
         </div>
 
         <!-- <div class="text-muted small">
