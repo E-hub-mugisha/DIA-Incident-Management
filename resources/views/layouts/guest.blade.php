@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'DIA Incident Management') }}</title>
+    <title>{{ config('app.name', 'VigilantEye Management') }}</title>
 
     <!-- Bootstrap 5 CDN -->
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}" />
@@ -110,7 +110,7 @@
                     <div class="card card-custom p-4">
                         <div class="text-center mb-3">
                             <a href="/" class="text-decoration-none">
-                                <div class="brand-title">DIA Incident Management</div>
+                                <div class="brand-title">VigilantEye Management</div>
                             </a>
                             <div class="brand-subtitle">Monitoring and Mitigation System</div>
                         </div>

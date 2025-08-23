@@ -5,8 +5,8 @@ use Illuminate\Support\Facades\Auth;
 <div class="sidebar" data-background-color="dark">
     <div class="sidebar-logo">
         <div class="logo-header" data-background-color="dark">
-            <a href="{{ route('dashboard') }}" class="logo">
-                {{ config('app.name', 'MIS Dashboard') }}
+            <a href="{{ route('dashboard') }}" class="logo text-white">
+                {{ config('app.name', 'VigilantEye') }}
             </a>
             <div class="nav-toggle">
                 <button class="btn btn-toggle toggle-sidebar">
