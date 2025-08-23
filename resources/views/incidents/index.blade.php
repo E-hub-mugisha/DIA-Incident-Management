@@ -95,9 +95,7 @@
                                             <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editIncidentModal{{ $incident->id }}">
                                                 Edit
                                             </button>
-                                            <a href="{{ route('incidents.report', $incident->id) }}" class="btn btn-sm btn-secondary">
-                                                Report
-                                            </a>
+                                            
                                             <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#generateReportModal{{ $incident->id }}">
                                                 Generate Report
                                             </button>
