@@ -7,18 +7,41 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
-        body {
-            background: linear-gradient(to bottom right, #002511, #a2b9adff);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        body, html {
+            height: 100%;
+            margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #fff;
         }
 
+        /* Background image with overlay */
+        body {
+            background: url('assets/still.jpg') no-repeat center center/cover;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background-color: rgba(0, 37, 17, 0.7); /* Dark green overlay */
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1; /* Place content above overlay */
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .welcome-card {
-            background: #fff;
+            background: rgba(255, 255, 255, 0.95); /* Slight transparency for card */
             color: #002511;
             border-radius: 1rem;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
@@ -71,6 +94,5 @@
             </div>
         </div>
     </div>
-
 </body>
 </html>
