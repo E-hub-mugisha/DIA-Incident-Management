@@ -9,6 +9,7 @@ use App\Models\Incident;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -42,19 +43,30 @@ class DashboardController extends Controller
         $monthlyData = array_combine($monthLabels, $monthValues);
 
         // Latest 5 Incidents
-        $mitigations = IncidentMitigation::with([ 'incident'])
+        $mitigations = IncidentMitigation::with(['incident'])
             ->latest()
             ->take(5)
             ->get();
 
         // Active Incidents without mitigation
-        $IncidentsWithoutMitigation = Incident::doesntHave('mitigations')
-            ->where('status', 'new')
-            ->with('category')
-            ->get();
+        if (Auth::user()->role === 'admin') {
+            $IncidentsWithoutMitigation = Incident::doesntHave('mitigations')
+                ->where('status', 'new')
+                ->with('category')
+                ->get();
+        } else {
+            $IncidentsWithoutMitigation = Incident::doesntHave('mitigations')
+                ->where('status', 'new')
+                ->where(function ($query) {
+                    $query->where('reported_by', Auth::id())
+                        ->orWhere('assigned_to', Auth::id());
+                })
+                ->with('category')
+                ->get();
+        }
 
-            $users = User::all();
-            $incidents = Incident::all();
+        $users = User::all();
+        $incidents = Incident::all();
         return view('dashboard.admin', compact(
             'totalUsers',
             'totalIncidents',
@@ -69,6 +81,4 @@ class DashboardController extends Controller
             'incidents'
         ));
     }
-
-    
 }

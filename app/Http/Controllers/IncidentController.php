@@ -6,6 +6,7 @@ use App\Mail\IncidentAssignmentMail;
 use App\Mail\IncidentMitigatedMail;
 use App\Mail\IncidentReportedMail;
 use App\Models\Category;
+use App\Models\Feedback;
 use App\Models\Incident;
 use App\Models\IncidentMitigation;
 use App\Models\IncidentReviews;
@@ -19,7 +20,12 @@ class IncidentController extends Controller
 {
     public function index()
     {
-        $incidents = Incident::with('category')->latest()->get();
+        if( Auth::user()->role === 'admin') {
+            $incidents = Incident::with('category')->latest()->get();
+        } else {
+            $incidents = Incident::with('category')->where('reported_by', Auth::id())->orWhere('assigned_to', Auth::id())->latest()->get();
+        }
+        // Get all categories and users
         $categories = Category::all();
         $users = User::all();
         return view('incidents.index', compact('incidents', 'categories', 'users'));
@@ -80,15 +86,15 @@ class IncidentController extends Controller
         $incident->delete();
         return redirect()->back()->with('success', 'Incident deleted successfully.');
     }
-    public function assign(Request $request, Incident $incident)
+    public function assign(Request $request, $id)
     {
         $request->validate([
-            'assigned_to' => ['required', 'exists:users,id'],
-            'status' => ['required', 'in:new,acknowledged'],
+            'assigned_to' => ['required'],
         ]);
 
+        $incident = Incident::findOrFail($id);
+
         $incident->assigned_to = $request->assigned_to;
-        $incident->status = $request->status;
         $incident->save();
 
         $user = User::find($incident->assigned_to);
@@ -114,7 +120,6 @@ class IncidentController extends Controller
     {
         $request->validate([
             'incident_id' => 'required|exists:incidents,id',
-            'rating' => 'required|integer|min:1|max:5',
             'comment' => 'required|string',
             'media' => 'nullable|file|max:2048', // 2MB max
         ]);
@@ -128,7 +133,6 @@ class IncidentController extends Controller
         IncidentReviews::create([
             'incident_id' => $request->incident_id,
             'user_id' => Auth::id(),
-            'rating' => $request->rating,
             'comment' => $request->comment,
             'media' => $mediaPath,
         ]);
@@ -199,5 +203,43 @@ class IncidentController extends Controller
     {
         $pdf = Pdf::loadView('incidents.reports', compact('incident'));
         return $pdf->download('incident-report-' . $incident->title . '.pdf');
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $incident = Incident::findOrFail($id);  
+        $request->validate([
+            'status' => 'required|in:new,acknowledged,in_progress,resolved',
+        ]);
+
+        $incident->status = $request->status;
+        $incident->save();
+
+        return redirect()->back()->with('success', 'Incident status updated successfully.');
+    }
+
+    public function submitFeedback(Request $request)
+    {
+        $request->validate([
+            'comment' => 'required|string',
+            'media' => 'nullable|file|max:2048', // 2MB max
+            'incident_id' => 'required|exists:incidents,id',
+        ]);
+
+        $mediaPath = null;
+
+        if ($request->hasFile('media')) {
+            $mediaPath = $request->file('media')->store('feedback_media', 'public');
+        }
+
+
+        Feedback::create([
+            'incident_id' => $request->incident_id,
+            'user_id' => Auth::id(),
+            'comment' => $request->comment,
+            'media' => $mediaPath,
+        ]);
+
+        return redirect()->back()->with('success', 'Feedback submitted successfully.');
     }
 }

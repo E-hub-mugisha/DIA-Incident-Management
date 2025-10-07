@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title','Mitigations')
+@section('title','Resolutions')
 @section('content')
 
 <div class="container">
@@ -8,7 +8,7 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Mitigation Actions</h4>
+                        <h4 class="card-title">Resolution Actions</h4>
 
                         {{-- Success & Error Alerts --}}
                         @if (session('success'))
@@ -30,13 +30,13 @@
                     <div class="card-body">
                         <div class="table-responsive">
                             {{-- Add Button --}}
-                            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addModal">Add Mitigation</button>
+                            <!-- <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addModal">Add Mitigation</button> -->
 
                             {{-- Table --}}
                             <table id="basic-datatables" class="display table table-striped table-hover">
                                 <thead>
                                     <tr>
-                                        <th>Incident</th>
+                                        <th>Cases</th>
                                         <th>Action Plan</th>
                                         <th>Responsible</th>
                                         <th>Status</th>
@@ -57,7 +57,7 @@
                                         </td>
                                         <td>
                                             <a href="{{ route('incidents.show', $mitigation->incident->id ) }}" class="btn btn-sm btn-warning">view</a>
-                                            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $mitigation->id }}">Delete</button>
+                                            <!-- <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $mitigation->id }}">Delete</button> -->
                                             
                                         </td>
                                     </tr>

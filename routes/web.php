@@ -66,7 +66,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/incidents/{id}', [IncidentController::class, 'show'])->name('incidents.show');
     Route::put('/incidents/{incident}', [IncidentController::class, 'update'])->name('incidents.update');
     Route::delete('/incidents/{incident}', [IncidentController::class, 'destroy'])->name('incidents.destroy');
-    Route::put('/incidents/{incident}/assign', [IncidentController::class, 'assign'])->name('incidents.assign');
+    Route::put('/incidents/{id}/assign', [IncidentController::class, 'assign'])->name('incidents.assign');
     Route::get('/incidents/get/assigned', [IncidentController::class, 'incidentAssigned'])->name('incidents.assigned');
     Route::get('/incidents/get/unassigned', [IncidentController::class, 'unassigned'])->name('incidents.unassigned');
     Route::post('/incident-reviews', [IncidentController::class, 'incidentReview'])->name('incident-reviews.store');
@@ -75,6 +75,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/incidents/{incident}/report', [App\Http\Controllers\IncidentController::class, 'generateReport'])
         ->name('incidents.report');
 
+    Route::put('/incidents/{id}/status', [IncidentController::class, 'updateStatus'])->name('incidents.updateStatus');
+    Route::post('/incidents/feedback', [IncidentController::class, 'submitFeedback'])->name('incidents.feedback.store');
 
     Route::get('/mitigations', [MitigationController::class, 'index'])->name('mitigations.index');
     Route::post('/mitigations', [MitigationController::class, 'store'])->name('mitigations.store');

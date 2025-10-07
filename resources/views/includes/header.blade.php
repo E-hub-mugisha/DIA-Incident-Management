@@ -116,42 +116,7 @@
                     </ul>
                 </li>
 
-                <!-- Quick Actions -->
-                <li class="nav-item topbar-icon dropdown hidden-caret">
-                    <a class="nav-link" data-bs-toggle="dropdown" href="#">
-                        <i class="fa-solid fa-gear"></i>
-                    </a>
-                    <div class="dropdown-menu quick-actions animated fadeIn">
-                        <div class="quick-actions-header">
-                            <span class="title mb-1">MIS Quick Actions</span>
-                            <span class="subtitle op-7">Shortcuts</span>
-                        </div>
-                        <div class="quick-actions-scroll scrollbar-outer">
-                            <div class="quick-actions-items">
-                                <div class="row m-0">
-                                    <a class="col-6 col-md-4 p-0" href="#">
-                                        <div class="quick-actions-item">
-                                            <div class="avatar-item bg-info rounded-circle"><i class="fa-solid fa-chart-simple"></i></div>
-                                            <span class="text">Analytics</span>
-                                        </div>
-                                    </a>
-                                    <a class="col-6 col-md-4 p-0" href="#">
-                                        <div class="quick-actions-item">
-                                            <div class="avatar-item bg-success rounded-circle"><i class="fa-solid fa-user-group"></i></div>
-                                            <span class="text">Users</span>
-                                        </div>
-                                    </a>
-                                    <a class="col-6 col-md-4 p-0" href="#">
-                                        <div class="quick-actions-item">
-                                            <div class="avatar-item bg-primary rounded-circle"><i class="fa fa-briefcase"></i></div>
-                                            <span class="text">Projects</span>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </li>
+                
 
                 <!-- User Profile -->
                 <li class="nav-item topbar-user dropdown hidden-caret">

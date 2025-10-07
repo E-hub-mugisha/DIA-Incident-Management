@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
-        body, html {
+        body,
+        html {
             height: 100%;
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -27,13 +29,15 @@
             left: 0;
             height: 100%;
             width: 100%;
-            background-color: rgba(0, 37, 17, 0.7); /* Dark green overlay */
+            background-color: rgba(0, 37, 17, 0.7);
+            /* Dark green overlay */
             z-index: 0;
         }
 
         .container {
             position: relative;
-            z-index: 1; /* Place content above overlay */
+            z-index: 1;
+            /* Place content above overlay */
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -41,7 +45,8 @@
         }
 
         .welcome-card {
-            background: rgba(255, 255, 255, 0.95); /* Slight transparency for card */
+            background: rgba(255, 255, 255, 0.95);
+            /* Slight transparency for card */
             color: #002511;
             border-radius: 1rem;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
@@ -76,23 +81,79 @@
             background-color: #014d27;
             transform: scale(1.05);
         }
+
+        .scrolling-text {
+            display: inline-block;
+            white-space: nowrap;
+            overflow: hidden;
+            animation: scroll-left 10s linear infinite;
+            font-weight: bold;
+        }
+
+        @keyframes scroll-left {
+            0% {
+                transform: translateX(100%);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        .scrolling-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 37, 17, 0.85);
+            /* Dark green semi-transparent */
+            padding: 0.5rem 0;
+            z-index: 9999;
+            text-align: center;
+        }
+
+        .scrolling-text {
+            display: inline-block;
+            white-space: nowrap;
+            animation: scroll-left 10s linear infinite;
+            font-weight: bold;
+            color: #fff;
+            font-size: 1.2rem;
+        }
+
+        @keyframes scroll-left {
+            0% {
+                transform: translateX(100%);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
+        }
     </style>
 </head>
+
 <body>
+
+    <div class="scrolling-banner">
+        <h1 class="scrolling-text">{{ config('app.name', 'VigilantEye Management Information System') }}</h1>
+    </div>
+
     <div class="container">
         <div class="welcome-card mx-auto">
-            <h1>Welcome to the VigilantEye Management Platform</h1>
+            <h1>RDF-Intelligence Department</h1>
             <p>Track, assign, mitigate, and resolve incidents with ease. Stay updated with real-time notifications and reports.</p>
 
             <div class="d-flex justify-content-center gap-3">
                 @if(Auth::check())
-                    <a href="{{ route('dashboard') }}" class="btn btn-custom">Go to Dashboard</a>
+                <a href="{{ route('dashboard') }}" class="btn btn-custom">Go to Dashboard</a>
                 @else
-                    <a href="{{ route('login') }}" class="btn btn-custom">Login</a>
-                    <a href="{{ route('register') }}" class="btn btn-outline-dark">Register</a>
+                <a href="{{ route('login') }}" class="btn btn-custom">Login</a>
+                <a href="{{ route('register') }}" class="btn btn-outline-dark">Register</a>
                 @endif
             </div>
         </div>
     </div>
 </body>
+
 </html>

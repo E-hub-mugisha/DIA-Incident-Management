@@ -35,19 +35,19 @@ class AuthenticatedSessionController extends Controller
                 return redirect()->route('admin.dashboard');
 
             case 'Risk Manager':
-                return redirect()->route('risks.index');
+                return redirect()->route('admin.dashboard');
 
             case 'Department Head':
-                return redirect()->route('departments.dashboard');
+                return redirect()->route('admin.dashboard');
 
             case 'Staff':
-                return redirect()->route('risks.index');
+                return redirect()->route('admin.dashboard');
 
             case 'Auditor':
-                return redirect()->route('auditor.dashboard');
+                return redirect()->route('admin.dashboard');
 
             default:
-                return redirect()->route('dashboard');
+                return redirect()->route('admin.dashboard');
         }
     }
 

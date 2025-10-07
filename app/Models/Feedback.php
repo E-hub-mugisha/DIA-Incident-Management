@@ -4,9 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class IncidentReviews extends Model
+class Feedback extends Model
 {
-    //
     protected $fillable = [
         'incident_id',
         'user_id',
@@ -16,7 +15,7 @@ class IncidentReviews extends Model
 
     public function incident()
     {
-        return $this->hasMany(Incident::class);
+        return $this->belongsTo(Incident::class);
     }
 
     public function user()

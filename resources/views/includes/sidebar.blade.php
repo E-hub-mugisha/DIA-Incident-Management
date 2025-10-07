@@ -59,42 +59,36 @@ use Illuminate\Support\Facades\Auth;
                         <p>Staff</p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('incidents.unassigned') }}">
+                        <p>Reported Case Unassigned</p>
+                    </a>
+                </li>
                 @endif
 
                 {{-- Admin, handler, reporter --}}
-                @if (Auth::check() && (Auth::user()->role == 'admin' || Auth::user()->role == 'handler' || Auth::user()->role == 'reporter'))
+                @if (Auth::check() && (Auth::user()->role == 'admin' || Auth::user()->role == 'handler'))
                 
                 <li class="nav-item">
                     <a href="{{ route('incidents.index') }}">
-                        <p>incidents</p>
+                        <p>View Reported Case</p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="{{ route('incidents.unassigned') }}">
-                        <p>Incidents Unassigned</p>
-                    </a>
-                </li>
+                
                 <li class="nav-item">
                     <a href="{{ route('mitigations.index') }}">
-                        <p>Mitigations</p>
+                        <p>Review the resolution</p>
                     </a>
                 </li>
                 
                 @endif
-
-                {{-- handler --}}
-                @if (Auth::check() && Auth::user()->role == 'handler')
+                {{-- Reporter only --}}
+                @if (Auth::check() && Auth::user()->role == 'reporter')
                 <li class="nav-item">
                     <a href="{{ route('incidents.index') }}">
-                        <p>My Incidents</p>
+                        <p>View Reported Cases</p>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="{{ route('mitigations.index') }}">
-                        <p>Mitigations</p>
-                    </a>
-                </li>
-                
                 @endif
 
             </ul>

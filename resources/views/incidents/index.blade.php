@@ -8,9 +8,9 @@
             <div class="col-md-12">
                 <div class="card shadow rounded-4">
                     <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
-                        <h4 class="card-title mb-0"><i class="bi bi-shield-exclamation me-2 text-danger"></i>Incident Management</h4>
+                        <h4 class="card-title mb-0"><i class="bi bi-shield-exclamation me-2 text-danger"></i>Reported Cases</h4>
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addIncidentModal">
-                            <i class="bi bi-plus-lg me-1"></i> Add Incident
+                            <i class="bi bi-plus-lg me-1"></i> Report a Case
                         </button>
                     </div>
                     <div class="card-body">
@@ -89,22 +89,78 @@
                                         </td>
 
                                         <td class="text-center">
-                                            <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#showIncidentModal{{ $incident->id }}">
-                                                View
-                                            </button>
-                                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editIncidentModal{{ $incident->id }}">
-                                                Edit
-                                            </button>
-                                            
-                                            <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#generateReportModal{{ $incident->id }}">
-                                                Generate Report
-                                            </button>
-                                            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteIncidentModal{{ $incident->id }}">
-                                                Delete
-                                            </button>
+                                            <div class="dropdown">
+                                                <button class="btn btn-sm btn-primary dropdown-toggle" type="button" id="incidentActionsDropdown{{ $incident->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Actions
+                                                </button>
+                                                <ul class="dropdown-menu" aria-labelledby="incidentActionsDropdown{{ $incident->id }}">
+                                                    <li>
+                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#showIncidentModal{{ $incident->id }}">
+                                                            View
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#editIncidentModal{{ $incident->id }}">
+                                                            Edit
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#updateStatusModal{{ $incident->id }}">
+                                                            Update Status
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#generateReportModal{{ $incident->id }}">
+                                                            Generate Report
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item text-danger" href="#" data-bs-toggle="modal" data-bs-target="#deleteIncidentModal{{ $incident->id }}">
+                                                            Delete
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </td>
 
+
                                     </tr>
+
+                                    {{-- Update Status Modal --}}
+                                    <div class="modal fade" id="updateStatusModal{{ $incident->id }}" tabindex="-1">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <form method="POST" action="{{ route('incidents.updateStatus', $incident->id) }}">
+                                                @csrf
+                                                @method('PUT')
+                                                <div class="modal-content shadow rounded-4">
+                                                    <div class="modal-header bg-info text-white rounded-top-4">
+                                                        <h5 class="modal-title">
+                                                            <i class="bi bi-arrow-repeat me-2"></i>Update Incident Status
+                                                        </h5>
+                                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+
+                                                        <div class="mb-3">
+                                                            <label for="status{{ $incident->id }}" class="form-label">Status</label>
+                                                            <select id="status{{ $incident->id }}" name="status" class="form-select" required>
+                                                                <option value="">-- Select Status --</option>
+                                                                @foreach (['new', 'acknowledged', 'in_progress', 'resolved'] as $status)
+                                                                <option value="{{ $status }}" {{ $incident->status == $status ? 'selected' : '' }}>
+                                                                    {{ ucwords(str_replace('_', ' ', $status)) }}
+                                                                </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="submit" class="btn btn-info">Update Status</button>
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
 
                                     {{-- Show Incident Modal --}}
                                     <div class="modal fade

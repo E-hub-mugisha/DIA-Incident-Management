@@ -2,11 +2,16 @@
 @section('title','Dashboard')
 @section('content')
 
+@php
+    use Illuminate\Support\Str;
+@endphp
+
+
 <div class="container">
     <div class="page-inner">
         <div class="row">
             <div class="col-md-12">
-                <h1 class="mb-4">Admin Dashboard</h1>
+                <h1 class="mb-4">{{ Str::upper(auth()->user()->role) }} Dashboard</h1>
 
                 {{-- Export Buttons --}}
                 <div class="mb-4">
@@ -212,13 +217,14 @@
                     <div class="card-body">
                         <div class="table-responsive">
                             {{-- Add Button --}}
-                            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addModal">Add Mitigation</button>
-
+                            @if( Auth::user()->role == 'Admin' || Auth::user()->role == 'Handler' )
+                            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addModal">Add Resolution</button>
+                            @endif
                             {{-- Table --}}
                             <table id="basic-datatables" class="display table table-striped table-hover">
                                 <thead>
                                     <tr>
-                                        <th>Incident</th>
+                                        <th>Case</th>
                                         <th>Action Plan</th>
                                         <th>Responsible</th>
                                         <th>Status</th>
@@ -239,7 +245,9 @@
                                         </td>
                                         <td>
                                             <a href="{{ route('incidents.show', $mitigation->incident->id ) }}" class="btn btn-sm btn-warning">view</a>
+                                            @if( Auth::user()->role == 'Admin' || Auth::user()->role == 'Handler' )
                                             <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ $mitigation->id }}">Delete</button>
+                                            @endif
                                         </td>
                                     </tr>
 
@@ -281,7 +289,7 @@
                 <form action="{{ route('mitigations.store') }}" method="POST" class="modal-content">
                     @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title">Add Mitigation</h5>
+                        <h5 class="modal-title">Add Resolution</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
@@ -317,5 +325,6 @@
         </div>
     </div>
 </div>
+
 
 @endsection

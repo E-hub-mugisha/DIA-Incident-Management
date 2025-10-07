@@ -58,4 +58,9 @@ class Incident extends Model
     {
         return $this->hasMany(IncidentMitigation::class);
     }
+
+    public function feedbacks()
+    {
+        return $this->hasMany(Feedback::class);
+    }
 }
