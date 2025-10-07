@@ -40,6 +40,7 @@
                                         <td>{{ $incident->reportedBy->name ?? 'N/A' }}</td>
                                         <td>
                                             @if (is_null($incident->assigned_to))
+                                            @if( Auth::check() && Auth::user()->role === 'admin' )
                                             <!-- Trigger Assign Button -->
                                             <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#assignModal{{ $incident->id }}">
                                                 Assign
@@ -77,6 +78,9 @@
                                                     </form>
                                                 </div>
                                             </div>
+                                            @elseif (Auth::check() && Auth::user()->role === 'reporter')
+                                            <span class="text-muted">Unassigned</span>
+                                            @endif
                                             @else
                                             {{ $incident->assignedTo->name }}
                                             @endif
@@ -444,14 +448,19 @@
 
                         <div class="mb-3">
                             <label for="reportedBy" class="form-label">Reported By</label>
+                            @if( Auth::check() && Auth::user()->role === 'reporter' )
+                            <input type="text" class="form-control" value="{{ Auth::user()->name }}" disabled>
+                            <input type="hidden" name="reported_by" value="{{ Auth::user()->id }}">
+                            @else
                             <select id="reportedBy" name="reported_by" class="form-select" required>
                                 <option value="">-- Select Reporter --</option>
                                 @foreach ($users as $user)
                                 <option value="{{ $user->id }}">{{ $user->name }}</option>
                                 @endforeach
                             </select>
+                            @endif
                         </div>
-
+                        @if( Auth::check() && Auth::user()->role !== 'reporter' )
                         <div class="mb-3">
                             <label for="assignedTo" class="form-label">Assigned To</label>
                             <select id="assignedTo" name="assigned_to" class="form-select">
@@ -464,14 +473,14 @@
 
                         <div class="mb-3">
                             <label for="incidentStatus" class="form-label">Status</label>
-                            <select id="incidentStatus" name="status" class="form-select" required>
+                            <select id="incidentStatus" name="status" class="form-select">
                                 <option value="">-- Select Status --</option>
                                 @foreach (['new', 'acknowledged', 'in_progress', 'resolved'] as $status)
                                 <option value="{{ $status }}">{{ $status }}</option>
                                 @endforeach
                             </select>
                         </div>
-
+                        @endif
                         <div class="mb-3">
                             <label for="incidentLocation" class="form-label">Location</label>
                             <input type="text" id="incidentLocation" name="location" class="form-control" placeholder="Where did the incident occur?">
