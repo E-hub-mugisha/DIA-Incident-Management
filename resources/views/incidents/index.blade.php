@@ -9,9 +9,11 @@
                 <div class="card shadow rounded-4">
                     <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
                         <h4 class="card-title mb-0"><i class="bi bi-shield-exclamation me-2 text-danger"></i>Reported Cases</h4>
+                        @if( Auth::check() && Auth::user()->role === 'reporter' )
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addIncidentModal">
                             <i class="bi bi-plus-lg me-1"></i> Report a Case
                         </button>
+                        @endif
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
